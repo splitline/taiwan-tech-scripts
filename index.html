@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hello Bulma!</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.6.0/js/all.js"></script>
+</head>
+
+<body>
+  <section class="hero is-info">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+          台科小工具
+        </h1>
+        <h2 class="subtitle">
+          一些關於台科的實用 script
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <div class="container content">
+      <span class="title">使用說明</span>
+      <p>
+        把你想要的功能裡的 <a class="button is-link is-small"><i class="fas fa-tools"></i>...</a>
+        按鈕拖至書籤列，接著前往相對應的頁面，點下你剛剛新增的書籤，便能執行相對應功能了 owo)/
+      </p>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <div class="container">
+      <div id="loading" class="has-text-centered">Loading...</div>
+      <div class="columns"></div>
+    </div>
+  </section>
+
+  <template id="script-card">
+    <div class="column">
+      <div class="card">
+        <div class="card-content">
+          <div id="detail" class="content"></div>
+          <div class="buttons">
+            <a id="script" class="button is-link is-medium is-fullwidth">
+              <span class="icon is-medium">
+                <i class="fas fa-tools"></i>
+              </span>
+              <span id="title"></span>
+            </a>
+            <a id="source" class="button is-fullwidth" target="_blank">
+              <span class="icon is-medium">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>Source Code</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    const ROOT_URL = 'https://raw.githubusercontent.com/splitline/taiwan-tech-scripts/master/';
+    const datas = [{
+        name: "計算本學期 GPA",
+        file: "gpa-calc.js",
+        detail: "在學校尚未公布 GPA 前，即可快速計算本學期 GPA；以 4.3 制為計算方式。",
+      },
+      {
+        name: "計算全部 GPA",
+        file: "gpa-calc-all.js",
+        detail: "快速計算歷年來的 GPA（包含當前學期）；以 4.3 制為計算方式。",
+      },
+      {
+        name: "一鍵填期末教學評量",
+        file: "auto-fill-final-evaluation.js",
+        detail: "一鍵填寫所有課程的期末評量；對於所有題目預設都是給滿分。",
+      },
+      {
+        name: "通識修課確認",
+        file: "general-check.js",
+        detail: "查看通識課程選修狀態，確認是否有達成畢業門檻。",
+      }
+    ];
+
+    const card = document.getElementById('script-card').content;
+
+    datas.forEach(data =>
+      fetch(ROOT_URL + data.file)
+      .then(r => r.text())
+      .then(script => {
+        const contains = document.querySelector('.columns');
+        card.querySelector('#detail').textContent = data.detail;
+        card.querySelector('#title').textContent = data.name;
+        card.querySelector('#script').href = "javascript:" + script;
+        card.querySelector('#source').href = ROOT_URL + data.file;
+        contains.appendChild(document.importNode(card, true));
+
+        document.getElementById('loading').classList.add("is-hidden");
+      })
+    )
+  </script>
+</body>
+
+</html>
