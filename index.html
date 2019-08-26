@@ -93,21 +93,19 @@
     ];
 
     const card = document.getElementById('script-card').content;
+    Promise.all(datas.map(data => fetch(ROOT_URL + data.file).then(r => r.text())))
+      .then(scripts =>
+        scripts.forEach((script, i) => {
+          const contains = document.querySelector('.columns');
+          card.querySelector('#detail').textContent = datas[i].detail;
+          card.querySelector('#title').textContent = datas[i].name;
+          card.querySelector('#script').href = "javascript:" + script;
+          card.querySelector('#source').href = ROOT_URL + datas[i].file;
+          contains.appendChild(document.importNode(card, true));
 
-    datas.forEach(data =>
-      fetch(ROOT_URL + data.file)
-      .then(r => r.text())
-      .then(script => {
-        const contains = document.querySelector('.columns');
-        card.querySelector('#detail').textContent = data.detail;
-        card.querySelector('#title').textContent = data.name;
-        card.querySelector('#script').href = "javascript:" + script;
-        card.querySelector('#source').href = ROOT_URL + data.file;
-        contains.appendChild(document.importNode(card, true));
-
-        document.getElementById('loading').classList.add("is-hidden");
-      })
-    )
+          document.getElementById('loading').classList.add("is-hidden");
+        })
+      )
   </script>
 </body>
 
